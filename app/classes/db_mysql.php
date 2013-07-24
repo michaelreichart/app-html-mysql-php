@@ -1,5 +1,5 @@
 <?php
-require_once ROOT . '_src/interfaces/dbInterface.php';
+// require_once ROOT . '_src/interfaces/dbInterface.php';
 
 /**
  *  Interface for the View class
@@ -16,8 +16,8 @@ require_once ROOT . '_src/interfaces/dbInterface.php';
  *  @see        http://michaelreichart.de/
  *  @since      Class available since Release 1.0.0
  */
-
-class Db_Mysql extends Db implements dbInterface
+//  extends Db implements dbInterface
+class Db_Mysql
 {
 
 	protected $connection = NULL;
@@ -29,7 +29,7 @@ class Db_Mysql extends Db implements dbInterface
         // Entwicklungszugang!
         if($_SERVER['SERVER_NAME'] == 'localhost'){
             $host     = 'localhost';
-            $database = 'welt';
+            $database = 'application';
             $user     = 'root';
             $password = '';
         }
