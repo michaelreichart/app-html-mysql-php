@@ -55,6 +55,28 @@ interface viewInterface
     public function setTemplate($template);
 
 /**
+ *  SETTER FOR $this->snippet
+ *  
+ *  @author     Michael Reichart <reichart@michaelreichart.de>
+ *  @version    1.0
+ *  @since      Method available since Release 1.0.0
+ *  
+ *  @param      string
+ */
+    public function setSnippet($snippet);
+
+/**
+ *  GETTER FOR SNIPPET
+ *  
+ *  @author     Michael Reichart <reichart@michaelreichart.de>
+ *  @version    1.0
+ *  @since      Method available since Release 1.0.0
+ *  
+ *  @return     string
+ */
+    public function getSnippet();
+
+/**
  *  GETTER FOR $this->content
  *  
  *  @author     Michael Reichart <reichart@michaelreichart.de>

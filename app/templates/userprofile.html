@@ -1,3 +1,9 @@
-<h2>Your Augmented profile</h2>
-<?php echo $content->getUsername(); ?><br>
-<?php echo $content->getEmail(); ?><br>
+<address>
+	<fieldset>
+	<legend>Your Profile</legend>
+	<?php echo $content->getSurname(); ?> 
+	<?php echo $content->getPrename(); ?><br />
+	<?php echo $content->getBirthday(); ?><br />
+	<?php echo $content->getEmail(); ?><br />
+	</fieldset>
+</address>

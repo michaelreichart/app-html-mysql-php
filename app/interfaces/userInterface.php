@@ -1,22 +1,37 @@
 <?php
 interface userInterface
 {
-    public function findUser ($id);
+    public function findUser ($userId);
+
+    public function storeUser ($data);
+    
+    public function updateUser($userId);
+    
+    public function deleteUser($userId);
+
     public function exists ($array = array());
+
     public function getMessageCount ();
+
     public function getAllMessageIds ();
-    public function getId ();
-    public function setId ($id);
-    public function getUsername ();
-    public function setUsername ($username);
+
+    public function getUserId ();
+    public function setUserId ($userId);
+
+    public function getSurname ();
+    public function setSurname ($surname);
+    
+    public function getPrename ();
+    public function setPrename ($prename); 
+
+    public function getBirthday ();
+    public function setBirthday ($birthday);
+    
     public function getEmail ();
     public function setEmail ($email);
+    
     public function getPassword ();
     public function setPassword ($password);
-    public function getUserData ();
-    public function setUserData ($userData);
-    public function getImage ();
-    public function setImage ($image);
 
 }
 

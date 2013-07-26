@@ -1,5 +1,5 @@
 <?php
-require_once ROOT . '_src/interfaces/messageInterface.php';
+require_once ROOT . 'app/interfaces/messageInterface.php';
 
 class Message extends Db_Mysql implements messageInterface
 {

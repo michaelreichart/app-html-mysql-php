@@ -1,5 +1,5 @@
 <?php
-require_once ROOT . '_src/interfaces/sessionInterface.php';
+require_once ROOT . 'app/interfaces/sessionInterface.php';
 
 /**
  * Session
@@ -19,7 +19,7 @@ class Session extends Db_Mysql implements sessionInterface
 	//	Eigenschaften
 
 	//	Session id
-		protected $id;
+		protected $sessionId;
 
 	//	Sessionstartzeitpunkt
 		protected $time;
@@ -39,31 +39,31 @@ class Session extends Db_Mysql implements sessionInterface
             }
 
             $this->setUserId($userId);
-            $this->setId();
+            $this->setSessionId();
             
             return TRUE;
 		}
 
 		//	GETTER UND SETTER
 		// SESSION ID
-		public function getId () {
-			return $this->id;
+		public function getSessionId () {
+			return $this->sessionId;
 		}
 		
-		public function setId ()
+		public function setSessionId ()
 		{
             @session_start();
 			
-			$this->id = session_id();
+			$this->sessionId = session_id();
 			$this->setTime();
 			
-			if ( !$this->isId() ) {
+			if ( !$this->isSessionId() ) {
                 $query = "
                     INSERT INTO 
                        sessions    
                         (session_id, start_time, user_id) 
                     VALUES 
-                        ('".$this->getId()."','".$this->getTime()."',".$this->getUserId().");";
+                        ('".$this->getSessionId()."','".$this->getTime()."',".$this->getUserId().");";
 			} else {
                 $query = "
                     UPDATE 
@@ -71,7 +71,7 @@ class Session extends Db_Mysql implements sessionInterface
                     SET 
                         start_time='".$this->getTime()."' 
                     WHERE 
-                        session_id='".$this->getId()."';";
+                        session_id='".$this->getSessionId()."';";
 			}
 			$this->query($query);
 
@@ -96,12 +96,13 @@ class Session extends Db_Mysql implements sessionInterface
             return $this->userId;
         }
         
+        
         public function setUserId ($val) {
             $this->userId = $val;
         }
         
         //	MORE ...
-		public function isId ()
+		public function isSessionId ()
 		{
 			$query = "
                 SELECT 
@@ -111,7 +112,7 @@ class Session extends Db_Mysql implements sessionInterface
                 FROM 
                     sessions 
                 WHERE 
-                    session_id='".$this->getId()."';";
+                    session_id='".$this->getSessionId()."';";
             
 			$this->query($query);
 			
@@ -137,7 +138,7 @@ class Session extends Db_Mysql implements sessionInterface
             FROM
                 sessions
             WHERE
-                session_id='" . $this->getId() . "'
+                session_id='" . $this->getSessionId() . "'
             ;";
         
         $this->query($query);

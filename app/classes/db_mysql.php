@@ -1,5 +1,5 @@
 <?php
-// require_once ROOT . '_src/interfaces/dbInterface.php';
+require_once ROOT . 'app/interfaces/dbInterface.php';
 
 /**
  *  Interface for the View class
@@ -16,10 +16,9 @@
  *  @see        http://michaelreichart.de/
  *  @since      Class available since Release 1.0.0
  */
-//  extends Db implements dbInterface
-class Db_Mysql
+  
+class Db_Mysql extends Db implements dbInterface
 {
-
 	protected $connection = NULL;
 	protected $result     = NULL;
 
@@ -77,6 +76,7 @@ class Db_Mysql
 			@mysql_close($this->connection);	 	
 	}
 
+	// Query im Objektkontext
 	public function query ($query)
 	{	
         if (is_resource($this->connection)) {

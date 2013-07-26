@@ -31,3 +31,18 @@
 
 					clear   : both;
  }
+.form-login {
+	display : block;
+	float   : right;
+}
+.form-login div {
+	display : block;
+	float   : left;
+	margin  : 0 1em;
+}
+.form-login legend {
+	display : none;
+}
+.form-login label {
+	display : none;
+}

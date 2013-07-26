@@ -36,6 +36,42 @@ class User extends Db_Mysql {
 	}
 
 	// PRIVATE METHODS
+
+	// findUser() - Statische Methode der Klasse
+	// mit der ein User ermittelt werden kann, 
+	// ohne vorher ein Userobjekt zu erzeugen
+	public function findUser($email) {
+		$sql = "
+			SELECT 
+				*
+			FROM
+				user
+			WHERE
+				email='" . $email . "'
+			;
+		";
+
+		$this->query($sql);
+
+		$numRows = mysql_num_rows($this->result);
+		$numFields = mysql_num_fields($this->result);
+
+		if ($numRows === 1) {
+			// Alles prima!
+			$row = mysql_fetch_assoc($this->result);
+
+
+			return TRUE;
+
+
+		} else {
+			// Ist nicht gut ...
+			return FALSE;
+		}
+
+	}
+
+
 	private function storeUser() {
 		$sql = "
 				INSERT INTO 
@@ -50,19 +86,29 @@ class User extends Db_Mysql {
 					)
 				;
 		";
-		if ($this->query($sql)) echo 'Prima!'; else echo 'Nicht gut!';
+		if ($this->query($sql)) {
+			$this->userId = mysql_insert_id();
+			echo $this->userId;
+		} else {
+			echo 'Nicht gut!';
+		}
 	}
 
+	private function updateUser() {}
+	private function deleteUser() {}
+
 	// GETTER und SETTER
-   /**
-    * @return String
-    */
+	public function getUserId(){
+		return $this->userId;
+	}
+	public function setUserId($userId){
+		if ($userId !== '') {
+			$this->userId = $userId;
+		}
+	}
 	public function getPrename(){
 		return $this->prename;
 	}
-   /**
-    * @var String $prename
-    */
 	public function setPrename($prename){
 		if ($prename !== '') {
 			$this->prename = $prename;
@@ -92,15 +138,9 @@ class User extends Db_Mysql {
 			$this->email = $email;
 		}
 	}
-   /**
-    * @return String
-    */
 	public function getPassword(){
 		return $this->password;
 	}
-   /**
-    * @var String $password
-    */
     public function setPassword($password){
 		if ($password !== '') {
 			$this->password = $password;

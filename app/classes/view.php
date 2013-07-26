@@ -1,10 +1,11 @@
 <?php
-require_once ROOT . '_src/interfaces/viewInterface.php';
+require_once ROOT . 'app/interfaces/viewInterface.php';
 
 class View implements viewInterface
 {
     // Properties
     private $template;
+    private $snippet;
     private $content;
     
     // Constructor
@@ -23,6 +24,16 @@ class View implements viewInterface
         $this->template = $template;
     }
 
+    public function getSnippet()
+    {
+        return $this->snippet;
+    }
+
+    public function setSnippet($snippet)
+    {
+        $this->snippet = $snippet;
+    }
+
     public function getContent()
     {
         return $this->content;
@@ -36,6 +47,12 @@ class View implements viewInterface
     public function display()
     {
         $output = $this->loadTemplate();
+        return $output;
+    }
+
+    public function displaySnippet()
+    {
+        $output = $this->loadSnippet();
         return $output;
     }
 
@@ -57,7 +74,7 @@ class View implements viewInterface
         $content = $this->getContent();
         $exists = file_exists($this->getTemplate());
         
-        if ($exists == TRUE){
+        if ($exists === TRUE){
             
             // creating an output buffer
             ob_start();
@@ -75,6 +92,33 @@ class View implements viewInterface
             
         } else {
             return '<p>Sorry, there is no template called "' . $this->getTemplate() . '".';
+        }
+    }
+
+    private function loadSnippet()
+    {
+        $content = $this->getContent();
+        $exists = file_exists($this->getSnippet());
+        
+        if ($exists === TRUE){
+            
+            // creating an output buffer
+            ob_start();
+
+            // grabbing the template file
+            // and transfering its contents into
+            // an variable instead of a process
+            require $this->getSnippet();
+
+            $output = ob_get_contents();
+            
+            // clear the output buffer
+            ob_end_clean();
+            
+            return $output;
+            
+        } else {
+            return '<p>Sorry, there is no snippet called "' . $this->getSnippet() . '".';
         }
     }
 

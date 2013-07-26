@@ -1,40 +1,40 @@
 <?php
-/** 
- *	Serverapplikation
- */
+	/* REGISTER */
+	define('ROOT', '../');
 
-//	Werteübernahme aus dem CGI Post Array
-	$userSurname    = $_POST['surname'];
-	$userPrename    = $_POST['prename'];
-	$userBirthday   = $_POST['birthday'];
- 	$userEmail    	= $_POST['email'];
-	$userPassword 	= $_POST['password'];
+	// Common Include für die Klassen- 
+	// und Konfigurationseinbindung
+	require_once ROOT . 'app/includes/configuration.php';
+	require_once ROOT . 'app/includes/functions.php';
+	require_once ROOT . 'app/includes/classes.php';
 
+//	Pflichtinstanzen erzeugen
+	$db      = new Db_Mysql;	// Datenbankobjekt
+	$user    = new User;		// User muss sein!
+	$session = new Session;		// Session hängt am User ...
 
-//	Datenbankverbindung aufbauen
-	$dbHost = 'localhost';
-	$dbUser = 'root';
-	$dbPassword = '';
-	$dbDatabase = 'application';
+	$data = array();
 
-	$dbConnection = mysql_connect($dbHost, $dbUser, $dbPassword);
-	mysql_select_db($dbDatabase);
+	foreach ($_POST as $key=>$value) {
+		$data[$key] = validateUserInput($value);
+	}
 
-	// Verbindung steht
-	// Datenabfrage nach dem User
-	$dbSql = 	"
-				INSERT INTO 
-					user
-					(prename, surname, birthday, email, password)
-				VALUES
-					(
-						'" . $userPrename . "',
-						'" . $userSurname . "',
-						'" . $userBirthday . "',
-						'" . $userEmail . "',
-						'" . $userPassword . "'
-					)
-				;";
-	echo $boolean = mysql_query($dbSql);
+	if($user->exists($data)) {} else {
+		$user->storeUser($data);
+	}
+	
+	if($user->exists($data)){
+		$user->findUser($user->getUserId());
+	}
 
+	
+	//  4. Template für die Seite auswählen
+	$snippet = ROOT . 'app/templates/userprofile.html';
+    
+    $view = new View;
+    $view->setSnippet($snippet);
+    $view->setContent($user);
+
+    //  5. Zwischenspeichern des contents
+	echo $view->displaySnippet();
 ?>

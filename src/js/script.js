@@ -11,28 +11,35 @@
 // - - - - - - -
 	// Eventhandler
 	var ajax = {
+		url     : null,
+		action  : null,
+		data    : null,
+		target  : null,
+
+		// Für Formulare
 		submit  : 	function (event) {
 						console.log('submitted!');
 
 						event.preventDefault();
 
-						var action = $(event.target)
+						ajax.action = $(event.target)
 										.closest('form')
-										.attr('action'),
-							data   = $(event.target)
+										.attr('action');
+						ajax.data   = $(event.target)
 										.closest('form')
-										.serialize()	// Inhalte der Form Url-encodiert speichern
+										.serialize();	// Inhalte der Form Url-encodiert speichern
 														// ?name1=value1&name2=value2
-						;
-						console.log(data);
+						ajax.target = $(event.data.target);
+
+						console.log(ajax.action);
 
 						// Asynchroner Request!
 						$.ajax({
 							// Ajax Attribute
 							method   : 'post',
-							url      : action, 	// Request für Datei
-							data     : data,	// Übergabe der Daten
-							dataType : 'html',	// Responseformat
+							url      : ajax.action, 	// Request für Datei
+							data     : ajax.data,		// Übergabe der Daten
+							dataType : 'html',			// Responseformat
 
 							// Ajax Handler
 							success  : ajax.success,	// Verarbeitung der Response
@@ -40,7 +47,8 @@
 						});
 
 					},
-
+		
+		// Für Anchor Elemente
 		load    : 	function (event) {
 						console.log('Anchor clicked!');
 
@@ -51,12 +59,13 @@
 
 						// Eigenes Verhalten definieren
 						// href Attribut aus dem angeklcikten Anchor abfragen
-						var url = $(event.target).attr('href');
+						ajax.url = 'app/' + $(event.target).attr('href');
+						ajax.target = $(event.data.target);
 
 						// Asynchroner Request!
 						$.ajax({
 							// Ajax Attribute
-							url      : url, 	// Request für Datei
+							url      : ajax.url, 	// Request für Datei
 							dataType : 'html',	// Responseformat
 
 							// Ajax Handler
@@ -68,22 +77,22 @@
 		success : 	function (data) {
 						console.log('AJAX Success!');
 
-						$('#content').html(data);			
+						$(ajax.target).html(data);			
 					},
 		error   : 	function (jqxhr, status, errorThrown) {
 						console.log('AJAX Error!');
 
-						$('#content').html('Hier stimmt was nicht, der Content wurde nicht gefunden!');			
+						$('#content').html('Hier stimmt was nicht, der Content [' + ajax.url + '] wurde nicht gefunden!');			
 					}
 	};
 
 	// Eventlistener
 	$('a[data-ajax!=false]')
 		.filter('a[href]')
-		.on('click', ajax.load);
+		.on('click', {target : '#content'}, ajax.load);
 
 	$('[type=submit]')
-		.on('click', ajax.submit);
+		.on('click', {target : '#content'}, ajax.submit);
 // - - - - - - -
 })(jQuery);
 

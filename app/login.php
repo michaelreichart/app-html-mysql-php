@@ -1,64 +1,78 @@
 <?php
-/** 
- *	Serverapplikation
- */
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
+/**
+ * Short description for file
+ * Long description for file (if any)...
+ * PHP version 5
+ * LICENSE: This source file is subject to version 3.01  * of the PHP license
+ * that is available through the world-wide-   * web at the following URI:
+ * http://www.php.net/license/3_01.txt.  If you did not receive a copy of
+ * the PHP License and are unable to obtain it through the web, please
+ * send a note to license@php.net so we can mail you a copy immediately.
+ *
+ * @category   CategoryName
+ * @package    PackageName
+ * @author     Original Author <author@example.com>
+ * @author     Another Author <another@example.com>
+ * @copyright  1997-2005 The PHP Group
+ * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
+ * @version    SVN: $Id$
+ * @link       http://pear.php.net/package/PackageName
+ * @see        NetOther, Net_Sample::Net_Sample()
+ * @since      File available since Release 1.2.0
+ * @deprecated File deprecated in Release 2.0.0
+ */
 
-//	Werteübernahme aus dem CGI Post Array
-	$userEmail    = $_POST['email'];
-	$userPassword = $_POST['password'];
+// TODO Lässt sich das generisch lösen?
+define ('ROOT', '../');
+
+// Common Includes
+require_once ROOT . 'app/includes/configuration.php';	
+require_once ROOT . 'app/includes/functions.php';	// Allgemeine Funktionen
+require_once ROOT . 'app/includes/classes.php';				
+
+// Pflichtinstanzen
+$db      = new Db_Mysql;
+$user    = new User;
+$session = new Session;
+
+// Eingabe : Datenübernahme
+$data = array();
+
+foreach ($_POST as $key=>$value) {
+	$data[$key] = validateUserInput($value);
+}
+
+// Verarbeitung
+// Prüfen, ob der User bereits angelegt ist
+// anhand Email und Passwort
+// ermittelt die userId und schreibt sie in das Userobjekt
+if ($user->exists($data))
+	$user->findUser($user->getUserId());
 
 
-//	Datenbankverbindung aufbauen
-	$dbHost = 'localhost';
-	$dbUser = 'root';
-	$dbPassword = '';
-	$dbDatabase = 'application';
+// Ausgabe
+// Template (hier nur ein Snippet)
+$snippet = ROOT . 'app/templates/userprofile.html';
 
-	$dbConnection = mysql_connect($dbHost, $dbUser, $dbPassword);
-	mysql_select_db($dbDatabase);
+// View generieren
+$view = new View;
+$view->setSnippet($snippet);
+$view->setContent($user);
 
-	// Verbindung steht
-	// Datenabfrage nach dem User
-	$dbSql = 	"
-				SELECT 
-					*
-				FROM 
-					user
-				WHERE
-					email='" . $userEmail . "'
-				AND
-					password='" . $userPassword . "'
-
-				;";
-	$dbResult = mysql_query($dbSql);
-
-	// Anzahl der gefundenen Datensätze
-	$dbNumRows   = mysql_num_rows($dbResult);
-	
-	// Anzahl der Felder in den Datensätzen
-	$dbNumFields = mysql_num_fields($dbResult);
-
-	// Datensätze auslesen
-	if ($dbNumRows > 0) {
-		while ( $dbRow = mysql_fetch_assoc($dbResult) ) {
-			echo '<h2>' . $dbRow['prename'];
-			echo 		  $dbRow['surname']		. '</h2>';
-			echo '<p>'  . $dbRow['email']		. '</p>';
-			echo '<p>'  . $dbRow['password']	. '</p>';
-			echo '<p>'  . $dbRow['birthday']	. '</p>';
-		}
-	} else {
-		echo 'Keine Daten gefunden!';
-	}
-/*
-	Literale in einfachen Anführungszeichen
-	sind 5 bis 8 mal schneller als solche
-	mit doppelten!
-	Literale in doppelten Anführungszeichen
-	werden auf Variablen geparst!
-
-	$a = 'welt';
-	echo "hallo $a"; // hallo welt
-
-*/
+// Ausgabe auf den Bildschirm
+echo $view->displaySnippet();
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
+

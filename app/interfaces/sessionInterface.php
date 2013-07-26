@@ -43,7 +43,7 @@ interface sessionInterface
  *  
  *  @return string;
  */
-	public function getId ();
+	public function getSessionId ();
 
 /**
  *  SETTER FOR ID
@@ -54,7 +54,7 @@ interface sessionInterface
  *  
  *  @return string;
  */
-	public function setId ();
+	public function setSessionId ();
 
 /**
  *  GETTER FOR TIME
@@ -108,7 +108,7 @@ interface sessionInterface
  *  
  *  @return boolean;
  */
-	public function isId ();
+	public function isSessionId ();
 
 /**
  *  FIND THE ID OF AN USER

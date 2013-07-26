@@ -1,5 +1,5 @@
 <?php
-require_once ROOT . '_src/interfaces/userInterface.php';
+require_once ROOT . 'app/interfaces/userInterface.php';
 
 /**
  * Short description for class
@@ -18,22 +18,32 @@ require_once ROOT . '_src/interfaces/userInterface.php';
 class User extends Db_Mysql implements userInterface
 {
     // Properties
-    private $id;
-    private $username;
+    private $userId;
+    private $surname;
+    private $prename;
+    private $birthday;
     private $email;
     private $password;
-    private $userData;
-    private $image;
-    
+
     // Magic Methods
-    private function __call($name, $arguments)
+    public function __call($name, $arguments)
     {
         echo '<tt style="color:red;"><br>Die Funktion ' . $name . ' ist noch nicht implementiert!</tt>';
     }
 
+    public function __construct($param = null) {
+        if ($param === 'empty') {
+            $this->prename  = null;
+            $this->surname  = null;
+            $this->birthday = null;
+            $this->email    = null;
+            $this->password = null;
+        }
+    }
+
     // Other Methods
     
-    public function findUser($id)
+    public function findUser($userId)
     {
         $query = "
             SELECT
@@ -41,26 +51,66 @@ class User extends Db_Mysql implements userInterface
             FROM
                 user
             WHERE
-                user_id=" . $id . "
+                userid=" . $userId . "
             ;";
         
         $this->query($query);
         $row = $this->fetchRow();
         
-        $this->setId($row['user_id']);
-        $this->setUsername($row['username']);
+        $this->setUserId($row['userid']);
+        $this->setPrename($row['prename']);
+        $this->setSurname($row['surname']);
+        $this->setBirthday($row['birthday']);
         $this->setEmail($row['email']);
         $this->setPassword($row['password']);
-        $this->setUserData($row['user_data']);
-        $this->setImage($row['image']);
         
         return true;
     }
     
+        public function storeUser($data = array()) {
+            
+            $this->setPrename($data['prename']);
+            $this->setSurname($data['surname']);
+            $this->setBirthday($data['birthday']);
+            $this->setEmail($data['email']);
+            $this->setPassword($data['password']);
+
+            $sql = "
+                INSERT INTO 
+                    user
+                    (prename, surname, birthday, email, password)
+                VALUES
+                    (   '" . $this->getPrename()  . "', 
+                        '" . $this->getSurname()  . "', 
+                        '" . $this->getBirthday() . "', 
+                        '" . $this->getEmail()    . "', 
+                        '" . $this->getPassword() . "'
+                    )
+                ;
+        ";
+        if ($this->query($sql)) {
+            $this->userId = mysql_insert_id();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @todo Funktion muss geschrieben werden ...
+     */
+    public function updateUser($userId = null) { /* doSomethingAwesome */}
+
+    /**
+     * @todo Funktion muss geschrieben werden ...
+     */
+    public function deleteUser($userId = null) { /* doSomethingAwesome */}
+
     /**
      *
      * @param  array $array
-     * @return boolean 
+     * @return boolean
+     *
      */
     public function exists($array = array())
     {
@@ -70,7 +120,6 @@ class User extends Db_Mysql implements userInterface
         if (isset($array['password'])){
              $this->setPassword($array['password']);
         }
-        echo "lala";
         return $this->findId();
     }
     
@@ -79,15 +128,15 @@ class User extends Db_Mysql implements userInterface
      */
     private function findId()
     {
-        $query = "
+       $query = "
             SELECT
-                user_id
+                userid
             FROM
                 user
             WHERE
                 email='" . $this->getEmail() . "'
             AND
-                password='" . md5($this->getPassword()) . "'
+                password='" . $this->getPassword() . "'
             ;";
         
         
@@ -114,7 +163,7 @@ class User extends Db_Mysql implements userInterface
         
         if ($row = $this->fetchRow()) {
             
-            $this->setId($row['user_id']);
+            $this->setUserId($row['userid']);
             return true;
             
         } else {
@@ -134,7 +183,7 @@ class User extends Db_Mysql implements userInterface
              FROM
                 messages
              WHERE
-                sender_id = " . $this->getId() . "
+                sender_id = " . $this->getUserId() . "
              ;
          ";
          
@@ -154,7 +203,7 @@ class User extends Db_Mysql implements userInterface
              FROM
                 messages
              WHERE
-                sender_id = " . $this->getId() . "
+                sender_id = " . $this->getUserId() . "
              ;
          ";
          
@@ -169,18 +218,25 @@ class User extends Db_Mysql implements userInterface
 
 
     // Getter und Setter
-    public function getId(){
-        return $this->id;
+    public function getUserId(){
+        return $this->userId;
     }
-    public function setId($id){
-        $this->id = $id;
+    public function setUserId($userId){
+        $this->userId = $userId;
     }
-    // USERNAME
-    public function getUsername(){
-        return $this->username;
+    // PRENAME
+    public function getPrename(){
+        return $this->prename;
     }
-    public function setUsername($username){
-        $this->username = $username;
+    public function setPrename($prename){
+        $this->prename = $prename;
+    }
+    // SURNAME
+    public function getSurname(){
+        return $this->surname;
+    }
+    public function setSurname($surname){
+        $this->surname = $surname;
     }
     // EMAIL
     public function getEmail(){
@@ -194,65 +250,14 @@ class User extends Db_Mysql implements userInterface
         return $this->password;
     }
     public function setPassword($password){
-        $this->password = $password;
+        $this->password = md5($password);
     }
-    // USER DATA
-    public function getUserData(){
-        return $this->userData;
+    // Birthday
+    public function getBirthday(){
+        return $this->birthday;
     }
-    public function setUserData($userData){
-        $this->userData = $userData;
+    public function setBirthday($birthday){
+        $this->birthday = $birthday;
     }
-    // IMAGE
-    public function getImage(){
-        return $this->image;
-    }
-    public function setImage($image){
-        $this->image = $image;
-    }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*     private function readDataFromDb()
-     {		
-         if ($this->getId() > 0) {
-			$query = "
-				SELECT
-					data, image
-				FROM
-					user
-				WHERE
-					user_id=" . $this->getId() . "
-				;";
-		
-			$this->query($query);
-		
-			$row = $this->fetchRow();
-
-			$this->setUserData = $row['data'];
-			$this->setImage    = $row['image'];
-		}
-     }
- */
 ?>

@@ -76,9 +76,32 @@
 					<!-- Contentmodul: Navigations-Komponente -->
 					<ul class="nav">
 						<li><a href="index.html" data-ajax="false">Home</a></li>
-						<li><a href="about.html">About</a></li>
-						<li><a href="contact.html">Contact</a></li>
+						<li><a href="register.php">New Account?</a></li>
+						<li><a href="messages.php">See Your Profile</a></li>
 					</ul>
+					
+					<!-- Login Komponente -->
+					<form action="app/login.php" method="post" class="form-horizontal form-login">
+						<fieldset>
+							<legend>Login</legend>
+							
+							<div class="form-inline">
+								<label for="email">Ihre E-Mail-Adresse</label>
+								<input type="email" id="email" name="email" value="michael@zenbox.de" />
+							</div>
+							
+							<div class="form-inline">
+								<label for="password">Ihr Passwort</label>
+								<input type="password" id="password" name="password" value="geheim" />
+							</div>
+											
+							<div class="form-button form-inline">
+								<input type="submit" value="login" />
+							</div>
+
+						</fieldset>
+					</form>
+					
 					</div>
 					
 				<!-- ----- -->
@@ -93,39 +116,16 @@
 				      <!-- Navigation Module -->
 				      <nav class="well sidebar-nav">
 				        <ul class="nav nav-list">
-				          <li class="nav-header">Sidebar</li>
-				          <li class="active"><a href="#">Link</a></li>
-				          <li><a href="#">Link</a></li>
-				          <li><a href="#">Link</a></li>
-				          <li><a href="#">Link</a></li>
+				          <li class="nav-header">You can do this:</li>
+				          <li><a href="messages.php">Read Your Messages</a></li>
+				          <li><a href="profile.php">See Your Profile</a></li>
+				          <li><a href="online.php">Who is Online?</a></li>
 				        </ul>
 				      </nav><!--/.well -->
 				      <!-- /Navigation Module -->
 				</div>
 				<div id="content" class="page-content span9">
 					
-				<!-- Login Komponente -->
-				<form action="app/login.php" method="post">
-					<fieldset>
-						<legend>Login</legend>
-						
-						<div class="form-text">
-							<label for="email">Ihre E-Mail-Adresse</label>
-							<input type="email" id="email" name="email" value="michael@zenbox.de" />
-						</div>
-						
-						<div class="form-text">
-							<label for="password">Ihr Passwort</label>
-							<input type="password" id="password" name="password" value="geheim" />
-						</div>
-										
-						<div class="form-button">
-							<input type="submit" value="login" />
-						</div>
-
-					</fieldset>
-				</form>
-
 				<!-- Registry Komponente -->
 				<form action="app/register.php" method="post">
 					<fieldset>
@@ -168,7 +168,7 @@
 			</div>
 		</div>
 		
-		<div class="page-footer"><p>page footer</p></div>
+		<div class="page-footer"><address>&copy; 2013, Michael Reichart [michael@zenbox.de]</div>
 	
 	</div>
 	
